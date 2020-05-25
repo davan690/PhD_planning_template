@@ -106,7 +106,7 @@
 \setlength{\emergencystretch}{3em} % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-\setcounter{secnumdepth}{5}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 \usepackage{booktabs}
 %!TEX TS-program = xelatex
 %!TEX encoding = UTF-8 Unicode
@@ -241,45 +241,76 @@ Outline of the calendar for the work. This is necessarily rough and subject to c
 
 
 \end{document}
-\usepackage[]{natbib}
-\bibliographystyle{apalike}
 
 \title{A Minimal Book Example}
 \author{Yihui Xie}
-\date{2020-05-22}
+\date{2020-05-25}
 
 \begin{document}
+\frontmatter
 \maketitle
 
-{
-\setcounter{tocdepth}{1}
-\tableofcontents
-}
-\hypertarget{prerequisites}{%
-\chapter{Prerequisites}\label{prerequisites}}
-
-This is a \emph{sample} book written in \textbf{Markdown}. You can use anything that Pandoc's Markdown supports, e.g., a math equation \(a^2 + b^2 = c^2\).
-
-The \textbf{bookdown} package can be installed from CRAN or Github:
+\mainmatter
+\hypertarget{phd-planning}{%
+\chapter{PhD planning}\label{phd-planning}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{install.packages}\NormalTok{(}\StringTok{"bookdown"}\NormalTok{)}
+\CommentTok{# install.packages("tinytex")}
+\NormalTok{tinytex}\OperatorTok{::}\KeywordTok{parse_packages}\NormalTok{(}\StringTok{"./planningBOOK.log"}\NormalTok{)}
+\CommentTok{# tinytex::install_tinytex()}
+\CommentTok{# tinytex:::install_yihui_pkgs()}
+\NormalTok{tinytex}\OperatorTok{:::}\KeywordTok{is_tinytex}\NormalTok{()}
+
+\CommentTok{# tinytex:::check_tl_version(x = "preamble.tex")}
+\NormalTok{tinytex}\OperatorTok{::}\KeywordTok{parse_install}\NormalTok{(}\StringTok{"./planningBOOK.log"}\NormalTok{)}
+
+\CommentTok{# install.packages("bookdown")}
 \CommentTok{# or the development version}
 \CommentTok{# devtools::install_github("rstudio/bookdown")}
+\KeywordTok{library}\NormalTok{(tinytex)}
+\KeywordTok{library}\NormalTok{(dplyr)}
+\KeywordTok{library}\NormalTok{(readr)}
+
+\CommentTok{# Here is a complete list about the "missing" packages:}
+
+\CommentTok{# fontenc: part of latex distribution}
+\CommentTok{# lmodern: is called "lm"}
+\CommentTok{# graphicx: part of the "graphics" package (which is part of "required")}
+\CommentTok{# lscape: part of the "graphics" package}
+\CommentTok{# otf: could be japanese-otf, font-otf, or japanese-otf-uptex or any combination thereof}
+\CommentTok{# plext: part of platex, so maybe also of uplatex}
+\CommentTok{# verbatim: part of the "required" package}
+\CommentTok{# devtools::install_github("njtierney/chaletex")}
+\KeywordTok{library}\NormalTok{(chaletex)}
+\NormalTok{lat_packages_needed <-}\StringTok{ }\KeywordTok{read_tex}\NormalTok{(}\StringTok{"./PhD_template.tex"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{tex_extract_preamble}\NormalTok{() }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{tex_extract_pkgs}\NormalTok{() }
+
+\CommentTok{# tinytex::tlmgr()}
+
+
+\NormalTok{lat_packages_needed }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{tex_install_pkgs}\NormalTok{()}
+
+
+\CommentTok{# automatically create a bib database for R packages}
+\NormalTok{knitr}\OperatorTok{::}\KeywordTok{write_bib}\NormalTok{(}\KeywordTok{c}\NormalTok{(}
+  \KeywordTok{.packages}\NormalTok{(), }\StringTok{'bookdown'}\NormalTok{, }\StringTok{'knitr'}\NormalTok{, }\StringTok{'rmarkdown'}
+\NormalTok{), }\StringTok{'packages.bib'}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
-
-Remember each Rmd file contains one and only one chapter, and a chapter is defined by the first-level heading \texttt{\#}.
-
-To compile this example to PDF, you need XeLaTeX. You are recommended to install TinyTeX (which includes XeLaTeX): \url{https://yihui.org/tinytex/}.
 
 \hypertarget{intro}{%
 \chapter{Introduction}\label{intro}}
 
-You can label chapter and section titles using \texttt{\{\#label\}} after them, e.g., we can reference Chapter \ref{intro}. If you do not manually label them, there will be automatic labels anyway, e.g., Chapter \ref{methods}.
+You can label chapter and section titles using \texttt{\{\#label\}}
+after them, e.g., we can reference Chapter @ref(intro). If you do not
+manually label them, there will be automatic labels anyway, e.g.,
+Chapter @ref(methods).
 
-Figures and tables with captions will be placed in \texttt{figure} and \texttt{table} environments, respectively.
+Figures and tables with captions will be placed in \texttt{figure} and
+\texttt{table} environments, respectively.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -297,7 +328,10 @@ Figures and tables with captions will be placed in \texttt{figure} and \texttt{t
 \caption{Here is a nice figure!}\label{fig:nice-fig}
 \end{figure}
 
-Reference a figure by its code chunk label with the \texttt{fig:} prefix, e.g., see Figure \ref{fig:nice-fig}. Similarly, you can reference tables generated from \texttt{knitr::kable()}, e.g., see Table \ref{tab:nice-tab}.
+Reference a figure by its code chunk label with the \texttt{fig:}
+prefix, e.g., see Figure @ref(fig:nice-fig). Similarly, you can
+reference tables generated from \texttt{knitr::kable()}, e.g., see Table
+@ref(tab:nice-tab).
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -308,42 +342,45 @@ Reference a figure by its code chunk label with the \texttt{fig:} prefix, e.g., 
 \end{Highlighting}
 \end{Shaded}
 
-\begin{table}
-
-\caption{\label{tab:nice-tab}Here is a nice table!}
-\centering
-\begin{tabular}[t]{rrrrl}
+\begin{longtable}[]{@{}rrrrl@{}}
+\caption{Here is a nice table!}\tabularnewline
 \toprule
-Sepal.Length & Sepal.Width & Petal.Length & Petal.Width & Species\\
+Sepal.Length & Sepal.Width & Petal.Length & Petal.Width &
+Species\tabularnewline
 \midrule
-5.1 & 3.5 & 1.4 & 0.2 & setosa\\
-4.9 & 3.0 & 1.4 & 0.2 & setosa\\
-4.7 & 3.2 & 1.3 & 0.2 & setosa\\
-4.6 & 3.1 & 1.5 & 0.2 & setosa\\
-5.0 & 3.6 & 1.4 & 0.2 & setosa\\
-\addlinespace
-5.4 & 3.9 & 1.7 & 0.4 & setosa\\
-4.6 & 3.4 & 1.4 & 0.3 & setosa\\
-5.0 & 3.4 & 1.5 & 0.2 & setosa\\
-4.4 & 2.9 & 1.4 & 0.2 & setosa\\
-4.9 & 3.1 & 1.5 & 0.1 & setosa\\
-\addlinespace
-5.4 & 3.7 & 1.5 & 0.2 & setosa\\
-4.8 & 3.4 & 1.6 & 0.2 & setosa\\
-4.8 & 3.0 & 1.4 & 0.1 & setosa\\
-4.3 & 3.0 & 1.1 & 0.1 & setosa\\
-5.8 & 4.0 & 1.2 & 0.2 & setosa\\
-\addlinespace
-5.7 & 4.4 & 1.5 & 0.4 & setosa\\
-5.4 & 3.9 & 1.3 & 0.4 & setosa\\
-5.1 & 3.5 & 1.4 & 0.3 & setosa\\
-5.7 & 3.8 & 1.7 & 0.3 & setosa\\
-5.1 & 3.8 & 1.5 & 0.3 & setosa\\
+\endfirsthead
+\toprule
+Sepal.Length & Sepal.Width & Petal.Length & Petal.Width &
+Species\tabularnewline
+\midrule
+\endhead
+5.1 & 3.5 & 1.4 & 0.2 & setosa\tabularnewline
+4.9 & 3.0 & 1.4 & 0.2 & setosa\tabularnewline
+4.7 & 3.2 & 1.3 & 0.2 & setosa\tabularnewline
+4.6 & 3.1 & 1.5 & 0.2 & setosa\tabularnewline
+5.0 & 3.6 & 1.4 & 0.2 & setosa\tabularnewline
+5.4 & 3.9 & 1.7 & 0.4 & setosa\tabularnewline
+4.6 & 3.4 & 1.4 & 0.3 & setosa\tabularnewline
+5.0 & 3.4 & 1.5 & 0.2 & setosa\tabularnewline
+4.4 & 2.9 & 1.4 & 0.2 & setosa\tabularnewline
+4.9 & 3.1 & 1.5 & 0.1 & setosa\tabularnewline
+5.4 & 3.7 & 1.5 & 0.2 & setosa\tabularnewline
+4.8 & 3.4 & 1.6 & 0.2 & setosa\tabularnewline
+4.8 & 3.0 & 1.4 & 0.1 & setosa\tabularnewline
+4.3 & 3.0 & 1.1 & 0.1 & setosa\tabularnewline
+5.8 & 4.0 & 1.2 & 0.2 & setosa\tabularnewline
+5.7 & 4.4 & 1.5 & 0.4 & setosa\tabularnewline
+5.4 & 3.9 & 1.3 & 0.4 & setosa\tabularnewline
+5.1 & 3.5 & 1.4 & 0.3 & setosa\tabularnewline
+5.7 & 3.8 & 1.7 & 0.3 & setosa\tabularnewline
+5.1 & 3.8 & 1.5 & 0.3 & setosa\tabularnewline
 \bottomrule
-\end{tabular}
-\end{table}
+\end{longtable}
 
-You can write citations, too. For example, we are using the \textbf{bookdown} package \citep{R-bookdown} in this sample book, which was built on top of R Markdown and \textbf{knitr} \citep{xie2015}.
+You can write citations, too. For example, we are using the
+\textbf{bookdown} package (Xie \protect\hyperlink{ref-R-bookdown}{2020})
+in this sample book, which was built on top of R Markdown and
+\textbf{knitr} (Xie \protect\hyperlink{ref-xie2015}{2015}).
 
 \hypertarget{literature}{%
 \chapter{Literature}\label{literature}}
@@ -371,6 +408,14 @@ Some \emph{significant} applications are demonstrated in this chapter.
 
 We have finished a nice book.
 
-  \bibliography{book.bib,packages.bib}
+\hypertarget{refs}{}
+\leavevmode\hypertarget{ref-xie2015}{}%
+Xie, Yihui. 2015. \emph{Dynamic Documents with R and Knitr}. 2nd ed.
+Boca Raton, Florida: Chapman; Hall/CRC. \url{http://yihui.org/knitr/}.
 
+\leavevmode\hypertarget{ref-R-bookdown}{}%
+---------. 2020. \emph{Bookdown: Authoring Books and Technical Documents
+with R Markdown}. \url{https://CRAN.R-project.org/package=bookdown}.
+
+\backmatter
 \end{document}
